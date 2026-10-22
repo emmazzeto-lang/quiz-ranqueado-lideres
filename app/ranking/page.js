@@ -1,5 +1,4 @@
 import { listarRanking } from "../lib/armazenamento";
-import { css } from "../lib/estilos";
 
 // Sempre lê dados novos, sem cache
 export const dynamic = "force-dynamic";
@@ -13,36 +12,66 @@ export default async function Ranking() {
     erro = true;
   }
 
+
+  //============FRONT-END============
   return (
     <main className="pagina">
-      <h1>Resultados</h1>
-      {erro ? (
-        <p className="aviso">Não foi possível carregar os resultados.</p>
-      ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Usuário</th>
-              <th>RA</th>
-              <th>Acertos</th>
-              <th>Pontos</th>
-            </tr>
-          </thead>
-          <tbody>
-            {dados.map((r, i) => (
-              <tr key={r.ra}>
-                <td>{i + 1}</td>
-                <td>{r.usuario}</td>
-                <td>{r.ra}</td>
-                <td>{r.percentual}%</td>
-                <td>{r.pontuacao}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-      <style>{css}</style>
+
+      <header className="cabecalho">
+        <h1>Resultados</h1>
+      </header>
+
+      <div className="corpo_principal">
+        <section className="container2">
+
+          {erro ? (
+            <p className="aviso">
+              Não foi possível carregar os resultados.
+            </p>
+          ) : (
+            <div className="tabela_wrapper">
+              <table className="tabela_ranking">
+                <thead>
+                  <tr>
+                    <th className="col_posicao">#</th>
+                    <th className="col_usuario">Usuário</th>
+                    <th className="col_ra">RA</th>
+                    <th className="col_acertos">Acertos</th>
+                    <th className="col_pontos">Pontos</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {dados.map((r, i) => (
+                    <tr key={r.ra}>
+                      <td className="posicao">
+                        {i + 1}
+                      </td>
+
+                      <td className="usuario">
+                        {r.usuario}
+                      </td>
+
+                      <td className="ra">
+                        {r.ra}
+                      </td>
+
+                      <td className="acertos">
+                        {r.percentual}%
+                      </td>
+
+                      <td className="pontos">
+                        {r.pontuacao}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+        </section>
+      </div>
     </main>
   );
 }

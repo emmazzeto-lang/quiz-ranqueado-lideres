@@ -1,0 +1,15 @@
+[
+  {
+    "ra": "25110445",
+    "usuario": "Gabriel",
+    "token": "7a3a2945-4626-4a9f-9cad-77fff94ff18c",
+    "iniciadoEm": 1792691126086,
+    "finalizadoEm": 1792691297825,
+    "acertos": 2,
+    "total": 3,
+    "percentual": 66.7,
+    "multiplicador": 1.05,
+    "pontuacao": 70,
+    "tempoSegundos": 172
+  }
+]

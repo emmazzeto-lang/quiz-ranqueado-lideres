@@ -1,15 +1,28 @@
 [
   {
-    "ra": "25110445",
-    "usuario": "Gabriel",
-    "token": "7a3a2945-4626-4a9f-9cad-77fff94ff18c",
-    "iniciadoEm": 1792691126086,
-    "finalizadoEm": 1792691297825,
-    "acertos": 2,
-    "total": 3,
-    "percentual": 66.7,
-    "multiplicador": 1.05,
-    "pontuacao": 70,
-    "tempoSegundos": 172
+    "ra": "25110102",
+    "usuario": "EXEMPLO",
+    "token": "0d3fec03-038f-4431-91c4-ae81629b92c0",
+    "iniciadoEm": 1792782544447,
+    "finalizadoEm": 1792782611811,
+    "acertos": 9,
+    "total": 16,
+    "percentual": 56.3,
+    "multiplicador": 1.039,
+    "pontuacao": 58.45,
+    "tempoSegundos": 67
+  },
+  {
+    "ra": "25110101",
+    "usuario": "EXEMPLO",
+    "token": "56402b24-9930-4854-9d3b-18ad07d47b33",
+    "iniciadoEm": 1792782808083,
+    "finalizadoEm": 1792782988552,
+    "acertos": 0,
+    "total": 16,
+    "percentual": 0,
+    "multiplicador": 1,
+    "pontuacao": 0,
+    "tempoSegundos": 180
   }
 ]

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { iniciarParticipacao } from "../../lib/armazenamento";
 import { perguntasPublicas, TEMPO_TOTAL } from "../../lib/perguntas";
+import { nomeProibido } from "../../lib/filtro";
 
 
 export async function POST(req) {

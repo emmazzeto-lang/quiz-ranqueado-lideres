@@ -150,7 +150,7 @@ export default function Quiz() {
       <div className="quiz_conteudo">
 
         {quiz.map((p, i) => (
-          <fieldset key={p.id} className="container2 pergunta">
+          <fieldset key={p.id} className="pergunta">
             
             <div className="pergunta_titulo">
               <span className="numero_pergunta">

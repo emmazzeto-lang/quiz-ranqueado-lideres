@@ -146,6 +146,16 @@ body {
   opacity: 0.6;
   cursor: not-allowed;
 }
+/* LINK "VER RANKING" */
+.link {
+  display: block;
+  margin-top: 18px;
+  text-align: center;
+  color: #60a5fa;
+}
+.link:hover {
+  color: #ffffff;
+}
 
 
 
@@ -236,7 +246,10 @@ body {
 }
 
 /* ===TÍTULO DA PERGUNTA=== */
-.pergunta div {
+.pergunta_titulo {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
   width: 100%;
   padding: 0 0 20px;
   font-family: "Plus Jakarta Sans", sans-serif;
@@ -249,9 +262,9 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   width: 32px;
   height: 32px;
-  margin-right: 10px;
   border-radius: 7px;
   background-color: #2563eb;
   font-family: "JetBrains Mono", monospace;
@@ -262,7 +275,7 @@ body {
 }
 /* TEXTO DA PERGUNTA */
 .texto_pergunta {
-  display: inline;
+  padding-top: 3px; /* alinha a primeira linha com o centro do número */
   line-height: 1.5;
 }
 

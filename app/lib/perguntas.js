@@ -78,7 +78,7 @@ export const perguntas = [
   },
   {
     id: 12,
-    texto: "",
+    texto: "Qual o time da Líderes Jr. responsável pelo nosso Marketing?",
     opcoes: ["Presidência", "Gestão de Pessoas", "Marketing", "Controladoria"], 
     correta: 2,
   },

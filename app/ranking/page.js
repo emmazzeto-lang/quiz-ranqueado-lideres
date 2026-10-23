@@ -1,4 +1,5 @@
 import { listarRanking } from "../lib/armazenamento";
+import AtualizarAuto from "./Atualizarauto";
 
 // Sempre lê dados novos, sem cache
 export const dynamic = "force-dynamic";
@@ -72,6 +73,8 @@ export default async function Ranking() {
 
         </section>
       </div>
+
+      <AtualizarAuto />
     </main>
   );
 }

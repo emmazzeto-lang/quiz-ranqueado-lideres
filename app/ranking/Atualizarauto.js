@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-// a página do ranking no servidor, então novos resultados aparecem sozinhos,
+// De tempos em tempos recarrega a página do ranking no servidor, então novos resultados aparecem sozinhos,
 // sem a pessoa precisar recarregar.
 export default function AtualizarAuto({ segundos = 10 }) {
   const router = useRouter();

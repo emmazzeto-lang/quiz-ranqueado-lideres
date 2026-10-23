@@ -8,8 +8,13 @@ export async function POST(req) {
   const ra = String(corpo.ra ?? "").trim().toUpperCase();
   const usuario = String(corpo.usuario ?? "").trim();
 
-  if (!/^[0-9A-Z]{3,20}$/.test(ra) || usuario.length < 2 || usuario.length > 30) {
+  if (!/^[0-9]{3,20}$/.test(ra) || usuario.length < 2 || usuario.length > 30) {
     return NextResponse.json({ erro: "Dados inválidos. Confira o RA e o nome." }, { status: 400 });
+  }
+
+ // Barra nomes ofensivos ANTES de registrar o RA, para ele não ficar "gasto"
+  if (nomeProibido(usuario)) {
+    return NextResponse.json({ erro: "Esse nome de usuário não é permitido. Escolha outro." }, { status: 400 });
   }
 
   const r = await iniciarParticipacao(ra, usuario).catch((e) => {

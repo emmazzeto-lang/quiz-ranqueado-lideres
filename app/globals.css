@@ -1,26 +1,672 @@
-@import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* =========================
+   CONFIGURAÇÃO GERAL
+   ========================= */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+/* HTML E BODY */
+html, body {
+  width: 100%;
+  min-height: 100%;
+}
+/* CORPO DA PÁGINA */
+body {
+  background-color: #040a24;
+  color: #ffffff;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/*login*/
+.pagina1 {
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: row;
+
+  background-color: #040a24;
+  font-family: "Inter", sans-serif;
+}
+/*outros*/
+.pagina2 {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #040a24;
+  font-family: "Inter", sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.corpo_principal {
+  flex: 1;
+
+  /*width: 100%;*/
+  min-width: 0;
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  background-color: #040a24;
+}
+.cabecalho {
+  width: 100%;
+  background-color: #050d2e;
+  color: #ffffff;
+  padding: 20px;
+  text-align: center;
+  border-bottom: 2px solid #0f1a5c;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+.cabecalho h1 {
+  margin: 0;
+}
+/* RODAPÉ */
+.rodape {
+  width: 100%;
+  background-color: #050d2e;
+  color: #cbd5e1;
+  text-align: center;
+  padding: 15px;
+  border-top: 2px solid #0f1a5c;
+  font-family: "JetBrains Mono", monospace;
+}
+
+
+
+/* =========================
+   CAIXA DO FORMULÁRIO
+   ========================= */
+.container1 {
+  width: 100%;
+  max-width: 490px;
+  padding: 40px;
+  background-color: #0a1245;
+  border: 2px solid #1c2870;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+/* TÍTULO DO LOGIN */
+.container1 h2 {
+  margin-bottom: 25px;
+  color: #ffffff;
+  text-align: center;
+}
+/* TEXTO DE EXPLICAÇÃO */
+.container1 > p {
+  margin-bottom: 20px;
+  line-height: 1.5;
+  color: #ffffff;
+}
+
+.campo {
+  display: block;
+  margin-bottom: 18px;
+  color: #cbd5e1;
+  font-weight: bold;
+}
+
+.campo input {
+  display: block;
+  width: 100%;
+  padding: 20px;
+  margin-top: 8px;
+  background-color: #050d2e;
+  border: 1px solid #aab1c5;
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 16px;
+}
+
+/* PLACEHOLDER */
+.campo input::placeholder {
+  color: #94a3b8;
+}
+/* CAMPO SELECIONADO */
+.campo input:focus {
+  outline: none;
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
+}
+
+/* MENSAGEM DE ERRO */
+.aviso {
+  margin-bottom: 15px;
+  color: #f87171;
+  text-align: center;
+}
+
+/* BOTÃO */
+.botao {
+  width: 100%;
+  padding: 10px;
+  /*margin-top: 1px;*/
+  border: none;
+  border-radius: 6px;
+  background-color: #2563eb;
+  color: #ffffff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+.botao:hover {
+  background-color: #60a5fa;
+  color: #040a24;
+}
+/* BOTÃO DESABILITADO */
+.botao:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+/* =========================
+   BANNER
+   ========================= */
+.hero-banner {
+  flex: 1;
+  min-width: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  text-align: center;
+  background-color: #0a1245;
+  color: #ffffff;
+  border: 2px solid #1c2870;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  min-height: calc(100vh - 80px);
+  padding: 20px 0;
+  text-align: center;
+}
+.hero-content h1 {
+  margin-bottom: 0;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 35px;
+  font-weight: 800;
+  line-height: 1.15;
+  color: #ffffff;
+  border-bottom: 2px solid #ffffff;
+}
+.hero-content .hero-texto {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 14px; /* espaço entre os parágrafos */
+  width: 100%;
+}
+.hero-content p {
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #cbd5e1;
+}
+.hero-content h2 {
+  margin-top: auto;
+  padding-top: 20px;
+  width: 100%;
+  border-top: 1px solid #1c2870;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #94a3b8;
+}
+
+
+
+/* =========================
+   QUIZ
+   ========================= */
+/* CABEÇALHO DO QUIZ */
+.quiz_cabecalho {
+  width: 100%;
+  padding: 24px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  background-color: #050d2e;
+  border-bottom: 2px solid #0f1a5c;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+/* TÍTULO */
+.quiz_titulo span {
+  display: block;
+  margin-bottom: 6px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #60a5fa;
+}
+.quiz_titulo h1 {
+  font-size: 24px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+
+/* ===TIMER=== */
+.timer {
+  flex-shrink: 0;
+  min-width: 130px;
+  padding: 12px 18px;
+  border: 1px solid #1c2870;
+  border-radius: 8px;
+  background-color: #0a1245;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  color: #ffffff;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+}
+/* TIMER QUANDO ESTIVER ACABANDO */
+.timer.urgente {
+  color: #f87171;
+  border-color: #f87171;
+  animation: timer_pulsando 1s infinite;
+}
+@keyframes timer_pulsando {
+  0%,
+  100% {opacity: 1;}
+  50% {opacity: 0.55;}
+}
+
+/* ====PERGUNTAS==== */
+.quiz_conteudo {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.pergunta {
+  width: 100%;
+  max-width: none;
+  padding: 28px;
+  background-color: #0a1245;
+  border: 2px solid #1c2870;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  font-family: "Plus Jakarta Sans", sans-serif
+}
+/* ===TÍTULO DA PERGUNTA=== */
+.pergunta div {
+  width: 100%;
+  padding: 0 0 20px;
+  font-family: "Inter", sans-serif;;
+  font-size: 17px;
+  font-weight: 700;
+  color: #ffffff;
+}
+/* NÚMERO DA PERGUNTA */
+.numero_pergunta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-right: 10px;
+  border-radius: 7px;
+  background-color: #2563eb;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  vertical-align: middle;
+}
+/* TEXTO DA PERGUNTA */
+.texto_pergunta {
+  display: inline;
+  line-height: 1.5;
+}
+
+/* =====OPÇÕES===== */
+.opcoes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+/* CADA OPÇÃO */
+.opcao {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #1c2870;
+  border-radius: 7px;
+  background-color: #050d2e;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+  color: #cbd5e1;
+}
+
+/* RADIO */
+.opcao input {
+  width: 17px;
+  height: 17px;
+  margin-right: 12px;
+  accent-color: #2563eb;
+  flex-shrink: 0;
+}
+/* TEXTO DA OPÇÃO */
+.opcao span {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #cbd5e1;
+}
+/* HOVER */
+.opcao:hover {
+  background-color: #0a1245;
+  border-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+/* OPÇÃO SELECIONADA */
+.opcao:has(input:checked) {
+  background-color: rgba(37, 99, 235, 0.15);
+  border-color: #60a5fa;
+}
+.opcao:has(input:checked) span {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* ==BOTÃO DE ENVIO== */
+.quiz_conteudo > .botao {
+  margin-top: 5px;
+}
+
+
+
+/* =========================
+   RANKING / RESULTADOS
+   ========================= */
+/* CONTAINER DO RANKING */
+.container2 {
+  max-width: 900px;
+  padding: 0;
+  overflow: hidden;
+  width: 100%;
+  background-color: #0a1245;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  border: 2px solid #1c2870;
+}
+
+/* ======TABELA====== */
+.tabela_wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+.tabela_ranking {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+/* CABEÇALHO DA TABELA */
+.tabela_ranking thead {
+  background-color: #050d2e;
+}
+.tabela_ranking th {
+  padding: 16px 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #94a3b8;
+  text-align: left;
+  border-bottom: 1px solid #1c2870;
+}
+
+/* LINHAs */
+.tabela_ranking tbody tr:not(:last-child) {
+  border-bottom: 1px solid rgba(28, 40, 112, 0.6);
+}
+
+/* TAMANO DAS CÉLULAS */
+.tabela_ranking td {
+  padding: 18px 20px;
+  vertical-align: middle;
+}
+
+/* DESTAQUE PROS TÍTULOS PRINCIPAIS */
+.tabela_ranking th.col_usuario,
+.tabela_ranking th.col_pontos {
+  color: #ffffff;
+}
+
+/* ===DESTAQUES===*/
+/* PONTOS */
+.tabela_ranking .pontos {
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: #60a5fa;
+}
+
+/* USUÁRIO */
+.tabela_ranking .usuario {
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* RA */
+.tabela_ranking .ra {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  color: #64748b;
+}
+/* # */
+.tabela_ranking .posicao {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+
+
+/* =========================
+   RESPONSIVIDADE
+   ========================= */
+
+/* ---- Tablets e telas menores ---- */
+@media (max-width: 768px) {
+
+  /* Login: banner e formulário empilhados */
+  .pagina1 {
+    flex-direction: column;
+  }
+
+  .pagina1 .corpo_principal {
+    min-height: auto;
+  }
+
+  .corpo_principal {
+    padding: 24px 16px;
+  }
+
+  .cabecalho {
+    padding: 16px;
+  }
+
+  .cabecalho h1 {
+    font-size: 22px;
+  }
+
+  .rodape {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  /* Banner */
+  .hero-banner {
+    min-height: auto;
+    padding: 40px 20px;
+  }
+
+  .hero-content {
+    padding: 20px 0;
+  }
+
+  .hero-content h1 {
+    font-size: 34px;
+  }
+
+  .hero-content p {
+    font-size: 15px;
+  }
+
+  /* Formulário */
+  .container1 {
+    padding: 28px 22px;
+  }
+
+  .campo input {
+    padding: 14px;
+  }
+
+  /* Quiz: cabeçalho */
+  .quiz_cabecalho {
+    padding: 16px 20px;
+    gap: 16px;
+  }
+
+  .quiz_titulo h1 {
+    font-size: 20px;
+  }
+
+  .timer {
+    min-width: 110px;
+    padding: 10px 14px;
+    font-size: 16px;
+  }
+
+  /* Quiz: perguntas */
+  .quiz_conteudo {
+    padding: 24px 16px;
+  }
+
+  .pergunta {
+    padding: 20px;
+  }
+
+  .pergunta div {
+    font-size: 16px;
+  }
+
+  /* Ranking */
+  .tabela_ranking th {
+    padding: 12px 14px;
+    font-size: 11px;
+  }
+
+  .tabela_ranking td {
+    padding: 14px;
+  }
+
+  .tabela_ranking .pontos {
+    font-size: 15px;
+  }
+
+  .tabela_ranking .usuario {
+    font-size: 14px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ---- Celulares ---- */
+@media (max-width: 480px) {
+
+  .hero-banner {
+    padding: 32px 16px;
+  }
+
+  .hero-content h1 {
+    font-size: 28px;
+  }
+
+  .container1 {
+    padding: 24px 16px;
+  }
+
+  .container1 h2 {
+    margin-bottom: 18px;
+    font-size: 22px;
+  }
+
+  /* Quiz: cabeçalho empilhado */
+  .quiz_cabecalho {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    padding: 14px 16px;
+    gap: 12px;
+  }
+
+  .timer {
+    width: 100%;
+  }
+
+  /* Quiz: perguntas e opções */
+  .quiz_conteudo {
+    padding: 20px 12px;
+    gap: 16px;
+  }
+
+  .pergunta {
+    padding: 16px;
+  }
+
+  .numero_pergunta {
+    width: 28px;
+    height: 28px;
+    margin-right: 8px;
+    font-size: 12px;
+  }
+
+  .opcao {
+    padding: 12px;
+  }
+
+  .opcao span {
+    font-size: 13px;
+  }
+
+  /* Ranking: mantém a rolagem horizontal da tabela */
+  .tabela_ranking {
+    min-width: 420px;
+  }
+
+  .tabela_ranking th,
+  .tabela_ranking td {
+    padding: 12px 10px;
+  }
 }

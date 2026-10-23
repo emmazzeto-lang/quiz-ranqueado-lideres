@@ -61,19 +61,29 @@ export default function Cadastro() {
   
   //============FRONT-END============
   return (
-    <main className="pagina">
-      <header className="cabecalho">
-        <h1>Quiz - Lideres Jr.</h1>
-      </header>
+    <main className="pagina1">
+
+      <section className="hero-banner">
+        <div className="hero-content">
+          <h1>Bem-vindos ao Quiz da <br></br> Semana da Liderança!</h1>
+
+          <div className="hero-texto">
+          <p>Para participar, é simples:</p>
+          <p><strong>1. Entre na plataforma:</strong> digite seu nome completo e seu RA nos campos indicados.</p>
+          <p><strong>2. Responda o quiz:</strong> leia cada pergunta com atenção e escolha a alternativa que considerar correta.</p>
+          <p><strong>3. Fique de olho no tempo:</strong> o cronômetro começa a contar assim que você inicia.</p>
+          
+          <p>Como funciona a pontuação? Sua nota depende de dois fatores: a quantidade de acertos e o tempo que você levou para finalizar. Quanto mais respostas certas e quanto mais rápido você terminar, maior será sua pontuação no ranking.</p>
+          <p>Boa sorte e bom quiz!</p>
+          </div>
+
+          <h2>Desenvolvido pelo Time de Soluções Digitais da Líderes JR. - 2026.</h2>
+        </div>
+      </section>
 
       <section className="corpo_principal">
         <div className="container1">
           <h2>Entrar no Quiz</h2>
-
-          <p>
-            Você terá 3 minutos para responder o quiz e só pode participar uma vez.
-            Quanto mais acertos, maior a pontuação; em caso de empate, vence quem terminar mais rápido.
-          </p>
 
           <form onSubmit={entrar}>
             <label className="campo" htmlFor="nome">
@@ -110,8 +120,7 @@ export default function Cadastro() {
             <button
               className="botao"
               type="submit"
-              disabled={enviando}
-            >
+              disabled={enviando}>
               {enviando ? "Aguarde..." : "Começar o quiz"}
             </button>
           </form>
@@ -121,11 +130,6 @@ export default function Cadastro() {
           </Link>
         </div>
       </section>
-
-      <footer className="rodape">
-        <p>Desenvolvido pelo Time de Soluções Digitais da Líderes JR. - 2026.</p>
-      </footer>
-
     </main>
   );
 }

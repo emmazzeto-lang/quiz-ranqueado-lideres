@@ -135,7 +135,7 @@ export default function Quiz() {
 
   //============FRONT-END============
     return (
-    <main className="pagina">
+    <main className="pagina2">
       <header className="quiz_cabecalho">
         <div className="quiz_titulo">
           <span>QUIZ</span>
@@ -199,6 +199,10 @@ export default function Quiz() {
           {enviando ? "Enviando..." : "Enviar"}
         </button>
       </div>
+
+      <footer className="rodape">
+        <p>Desenvolvido pelo Time de Soluções Digitais da Líderes JR. - 2026.</p>
+      </footer>
     </main>
   );
 }

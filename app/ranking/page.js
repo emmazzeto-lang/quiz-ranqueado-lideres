@@ -16,7 +16,7 @@ export default async function Ranking() {
 
   //============FRONT-END============
   return (
-    <main className="pagina">
+    <main className="pagina2">
 
       <header className="cabecalho">
         <h1>Resultados</h1>
@@ -37,7 +37,6 @@ export default async function Ranking() {
                     <th className="col_posicao">#</th>
                     <th className="col_usuario">Usuário</th>
                     <th className="col_ra">RA</th>
-                    <th className="col_acertos">Acertos</th>
                     <th className="col_pontos">Pontos</th>
                   </tr>
                 </thead>
@@ -57,10 +56,6 @@ export default async function Ranking() {
                         {r.ra}
                       </td>
 
-                      <td className="acertos">
-                        {r.percentual}%
-                      </td>
-
                       <td className="pontos">
                         {r.pontuacao}
                       </td>
@@ -70,9 +65,12 @@ export default async function Ranking() {
               </table>
             </div>
           )}
-
         </section>
       </div>
+
+      <footer className="rodape">
+        <p>Desenvolvido pelo Time de Soluções Digitais da Líderes JR. - 2026.</p>
+      </footer>
 
       <AtualizarAuto />
     </main>

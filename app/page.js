@@ -2,8 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+<<<<<<< HEAD
 import Link from "next/link";
 import { css } from "./lib/estilos";
+=======
+>>>>>>> main
 
 export default function Cadastro() {
   const router = useRouter();
@@ -59,8 +62,11 @@ export default function Cadastro() {
     }
   }
 
+  
+  //============FRONT-END============
   return (
     <main className="pagina">
+<<<<<<< HEAD
       <h1>Cadastro</h1>
       <p>
         Você terá 3 minutos para responder o quiz e só pode participar uma vez. Quanto mais rápido
@@ -84,6 +90,63 @@ export default function Cadastro() {
         Ver ranking
       </Link>
       <style>{css}</style>
+=======
+      <header className="cabecalho">
+        <h1>Quiz - Lideres Jr.</h1>
+      </header>
+
+      <section className="corpo_principal">
+        <div className="container1">
+          <h2>Entrar no Quiz</h2>
+
+          <form onSubmit={entrar}>
+            <label className="campo" htmlFor="nome">
+              Nome de usuário
+
+              <input
+                type="text"
+                id="nome"
+                placeholder="Digite seu nome"
+                value={usuario}
+                onChange={(e) => setUsuario(e.target.value)}
+                maxLength={30}
+                required
+              />
+            </label>
+
+            <label className="campo" htmlFor="ra">
+              RA
+
+              <input
+                type="text"
+                id="ra"
+                placeholder="Digite seu RA"
+                value={ra}
+                onChange={(e) => setRa(e.target.value)}
+                maxLength={20}
+                inputMode="numeric"
+                required
+              />
+            </label>
+
+            {erro && <p className="aviso">{erro}</p>}
+
+            <button
+              className="botao"
+              type="submit"
+              disabled={enviando}
+            >
+              {enviando ? "Aguarde..." : "Começar o quiz"}
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <footer className="rodape">
+        <p>Desenvolvido pelo Time de Soluções Digitais da Líderes JR. - 2026.</p>
+      </footer>
+
+>>>>>>> main
     </main>
   );
 }

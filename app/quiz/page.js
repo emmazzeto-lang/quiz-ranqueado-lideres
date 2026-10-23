@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { css } from "../lib/estilos";
 
 const CHAVE = "quizSessao";
 
@@ -133,37 +132,73 @@ export default function Quiz() {
 
   if (!quiz) return null;
 
-  return (
+
+  //============FRONT-END============
+    return (
     <main className="pagina">
-      <div className={restante <= 30 ? "timer urgente" : "timer"}>⏱ {formatar(restante)}</div>
+      <header className="quiz_cabecalho">
+        <div className="quiz_titulo">
+          <span>QUIZ</span>
+          <h1>Semana da Liderança</h1>
+        </div>
+        <div className={restante <= 30 ? "timer urgente" : "timer"}>
+          ⏱ {formatar(restante)}
+        </div>
+      </header>
 
-      {quiz.map((p, i) => (
-        <fieldset key={p.id} className="cartao">
-          <legend>
-            {i + 1}. {p.texto}
-          </legend>
-          {p.opcoes.map((o) => (
-            <label key={o.original} className="opcao">
-              <input
-                type="radio"
-                name={`pergunta-${p.id}`}
-                checked={respostas[p.id] === o.original}
-                onChange={() => escolher(p.id, o.original)}
-                disabled={enviando || restante === 0}
-              />
-              <span>{o.texto}</span>
-            </label>
-          ))}
-        </fieldset>
-      ))}
 
-      {faltando && <p className="aviso">Responda todas as perguntas antes de enviar.</p>}
-      {erro && <p className="aviso">{erro}</p>}
+      <div className="quiz_conteudo">
 
-      <button className="botao" onClick={enviarManual} disabled={enviando || restante === 0}>
-        {enviando ? "Enviando..." : "Enviar"}
-      </button>
-      <style>{css}</style>
+        {quiz.map((p, i) => (
+          <fieldset key={p.id} className="container2 pergunta">
+            
+            <div className="pergunta_titulo">
+              <span className="numero_pergunta">
+                {i + 1}
+              </span>
+              <span className="texto_pergunta">
+                {p.texto}
+              </span>
+            </div>
+
+            <div className="opcoes">
+              {p.opcoes.map((o) => (
+                <label
+                  key={o.original}
+                  className="opcao">
+                  <input
+                    type="radio"
+                    name={`pergunta-${p.id}`}
+                    checked={respostas[p.id] === o.original}
+                    onChange={() => escolher(p.id, o.original)}
+                    disabled={enviando || restante === 0}/>
+                  <span>{o.texto}</span>
+                </label>
+              ))}
+            </div>
+
+          </fieldset>
+        ))}
+
+        {faltando && (
+          <p className="aviso">
+            Responda todas as perguntas antes de enviar.
+          </p>
+        )}
+
+        {erro && (
+          <p className="aviso">
+            {erro}
+          </p>
+        )}
+
+        <button
+          className="botao"
+          onClick={enviarManual}
+          disabled={enviando || restante === 0}>
+          {enviando ? "Enviando..." : "Enviar"}
+        </button>
+      </div>
     </main>
   );
 }

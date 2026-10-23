@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { css } from "./lib/estilos";
 
 export default function Cadastro() {
@@ -79,6 +80,9 @@ export default function Cadastro() {
           {enviando ? "Aguarde..." : "Começar o quiz"}
         </button>
       </form>
+      <Link href="/ranking" className="link">
+        Ver ranking
+      </Link>
       <style>{css}</style>
     </main>
   );

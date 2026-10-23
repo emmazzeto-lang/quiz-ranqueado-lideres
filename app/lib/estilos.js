@@ -3,6 +3,8 @@ export const css = `
     font-family: system-ui, sans-serif; background: #000; min-height: 100vh; }
   .pagina h1 { font-size: 1.6rem; margin: 0 0 16px; }
 
+  .link { display: inline-block; margin-top: 20px; color: #5b3a9e; font-weight: 600; }
+
   .cartao { background: #000; border: 1px solid #ddd; border-radius: 10px;
     padding: 16px; margin: 0 0 14px; }
   .cartao legend { font-weight: 600; padding: 0 6px; }
@@ -31,4 +33,4 @@ export const css = `
   input:focus-visible, .botao:focus-visible { outline: 3px solid #1a73e8; outline-offset: 2px; }
 `;
 
-//Não está re
+//Não está responsivo

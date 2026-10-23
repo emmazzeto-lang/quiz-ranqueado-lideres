@@ -21,12 +21,16 @@ export async function POST(req) {
     const total = perguntas.length;
     const percentual = Math.round((acertos / total) * 1000) / 10;
 
-    // Multiplicador de velocidade: 1 (no limite do tempo) até 2 (resposta instantânea) 
+     // O que mais pesa é ACERTAR. A velocidade é só um bônus pequeno:
+    // vai de 1,0 (usou todo o tempo) até 1 + 1/total (terminou na hora).
+    // Esse teto garante que UMA resposta certa a mais sempre vale mais do que qualquer
+    // vantagem de velocidade. Entre quem acertou o mesmo número, vence o mais rápido.
+    // (Com 0 acertos a pontuação é 0, nunca se ganha ponto só por ser rápido.)
     const restante = Math.max(0, TEMPO_TOTAL - decorrido);
-    const multiplicador = Math.round((1 + restante / TEMPO_TOTAL) * 100) / 100; // pontuação não pode ser maior por velocidade, mas mais pelo acerto
-    const pontuacao = Math.round(percentual * multiplicador * 10) / 10;
+    const multiplicador = 1 + restante / TEMPO_TOTAL / total; // pontuação corrigida
+    const pontuacao = Math.round((acertos/ total)* 100 * multiplicador * 100) / 100;
 
-    return { acertos, total, percentual, multiplicador, pontuacao, tempoSegundos: Math.round(decorrido) };
+    return { acertos, total, percentual, multiplicador: Math.round(multiplicador * 1000) / 1000, pontuacao, tempoSegundos: Math.round(decorrido) };
   }).catch((e) => {
     console.error("[enviar] ERRO:", e);
     return null;

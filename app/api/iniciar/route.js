@@ -1,10 +1,26 @@
 import { NextResponse } from "next/server";
 import { iniciarParticipacao } from "../../lib/armazenamento";
-import { perguntasPublicas, TEMPO_TOTAL } from "../../lib/perguntas";
+import {
+  perguntasPublicas,
+  TEMPO_TOTAL,
+  ABERTURA,
+  FECHAMENTO,
+  situacaoHorario,
+  formatarHorario,
+} from "../../lib/perguntas";
 import { nomeProibido } from "../../lib/filtro";
 
 
 export async function POST(req) {
+  // Fora do horário ninguém começa (o RA não é registrado, pode tentar de novo depois)
+  const situacao = situacaoHorario();
+  if (situacao === "antes") {
+    return NextResponse.json({ erro: `O quiz ainda não começou. Ele abre em ${formatarHorario(ABERTURA)}.` }, { status: 403 });
+  }
+  if (situacao === "depois") {
+    return NextResponse.json({ erro: `O quiz foi encerrado em ${formatarHorario(FECHAMENTO)}.` }, { status: 403 });
+  }
+
   const corpo = await req.json().catch(() => ({}));
   const ra = String(corpo.ra ?? "").trim().toUpperCase();
   const usuario = String(corpo.usuario ?? "").trim();

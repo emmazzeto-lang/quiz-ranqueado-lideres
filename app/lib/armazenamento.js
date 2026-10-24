@@ -1,96 +1,133 @@
-import { promises as fs } from "fs";
-import path from "path";
+import { createClient } from "@supabase/supabase-js";
 import { randomUUID } from "crypto";
 
-// SOMENTE SERVIDOR. Substitui o banco de dados: os resultados ficam no
-// arquivo dados/resultados.json, na pasta do projeto.
-const PASTA = path.join(process.cwd(), "dados");
-const ARQUIVO = path.join(PASTA, "resultados.json");
+// SOMENTE SERVIDOR. Os resultados ficam na tabela "participantes" do Supabase
+// (o SQL para criar a tabela está em supabase/schema.sql).
+// Usa a chave SECRETA, que nunca pode ir para o navegador: por isso as variáveis
+// NÃO começam com NEXT_PUBLIC_.
+const TABELA = "participantes";
 
-// Fila: executa uma operação por vez. Sem isso, duas pessoas enviando ao mesmo
-// tempo poderiam sobrescrever o arquivo uma da outra. Fica em globalThis para
-// ser a mesma fila em todas as rotas.
-const g = globalThis;
-g.__quizFila = g.__quizFila || Promise.resolve();
+let cliente = null;
 
-function naFila(tarefa) {
-  const proxima = g.__quizFila.then(tarefa);
-  g.__quizFila = proxima.catch(() => {});
-  return proxima;
-}
-
-async function ler() {
-  try {
-    const texto = await fs.readFile(ARQUIVO, "utf-8");
-    return texto.trim() ? JSON.parse(texto) : []; // arquivo vazio = sem participantes
-  } catch (e) {
-    if (e.code === "ENOENT") return []; // arquivo ainda não existe
-    throw e;
+function banco() {
+  if (cliente) return cliente;
+  // Aceita a URL com ou sem o "/rest/v1/" do final (o painel mostra das duas formas)
+  const url = process.env.SUPABASE_URL?.trim().replace(/\/rest\/v1\/?$/, "");
+  const chave = process.env.SUPABASE_SECRET_KEY?.trim();
+  if (!url || !chave) {
+    throw new Error("Faltam SUPABASE_URL e/ou SUPABASE_SECRET_KEY nas variáveis de ambiente.");
   }
-}
-
-async function gravar(lista) {
-  await fs.mkdir(PASTA, { recursive: true });
-  // Grava num arquivo temporário e troca: evita arquivo pela metade se cair a energia
-  const conteudo = JSON.stringify(lista, null, 2);
-  const temp = ARQUIVO + ".tmp";
-  try {
-    await fs.writeFile(temp, conteudo, "utf-8");
-    await fs.rename(temp, ARQUIVO);
-  } catch (e) {
-    // No Windows, antivírus/OneDrive podem travar a troca do arquivo (EPERM/EBUSY).
-    // Nesse caso grava direto no arquivo final.
-    console.error("[armazenamento] troca falhou, gravando direto:", e.code || e.message);
-    await fs.writeFile(ARQUIVO, conteudo, "utf-8");
-    await fs.rm(temp, { force: true }).catch(() => {});
-  }
+  cliente = createClient(url, chave, { auth: { persistSession: false } });
+  return cliente;
 }
 
 // Registra o início da participação. Um RA só pode iniciar uma vez.
-export function iniciarParticipacao(ra, usuario) {
-  return naFila(async () => {
-    const lista = await ler();
-    if (lista.some((r) => r.ra === ra)) return { jaExiste: true };
+export async function iniciarParticipacao(ra, usuario) {
+  const token = randomUUID();
+  const { error } = await banco()
+    .from(TABELA)
+    .insert({ ra, usuario, token, iniciado_em: new Date().toISOString() });
 
-    const registro = {
-      ra,
-      usuario,
-      token: randomUUID(),
-      iniciadoEm: Date.now(),
-      finalizadoEm: null,
-      acertos: null,
-      total: null,
-      percentual: null,
-      multiplicador: null,
-      pontuacao: null,
-      tempoSegundos: null,
-    };
-    lista.push(registro);
-    await gravar(lista);
-    return { token: registro.token };
-  });
+  // 23505 = valor repetido na chave (o RA já existe)
+  if (error?.code === "23505") return { jaExiste: true };
+  if (error) throw error;
+  return { token };
 }
 
-// Fecha a participação. "calcular" recebe o registro e devolve os campos do resultado.
-export function finalizarParticipacao(ra, token, calcular) {
-  return naFila(async () => {
-    const lista = await ler();
-    const registro = lista.find((r) => r.ra === ra && r.token === token);
-    if (!registro) return { erro: "sessao" };
-    if (registro.finalizadoEm) return { erro: "ja_enviado" };
-
-    Object.assign(registro, calcular(registro), { finalizadoEm: Date.now() });
-    await gravar(lista);
-    return { ok: true };
+// Salva uma resposta durante o quiz. "inicioMinimo" (ms) é o horário de início mais
+// antigo que ainda está dentro do prazo: quem começou antes disso já estourou o tempo.
+// Devolve false se não gravou (sessão inválida, já enviado ou tempo esgotado).
+export async function salvarResposta(ra, token, perguntaId, opcao, inicioMinimo) {
+  const { data, error } = await banco().rpc("salvar_resposta", {
+    p_ra: ra,
+    p_token: token,
+    p_pergunta: String(perguntaId),
+    p_opcao: opcao,
+    p_limite: new Date(inicioMinimo).toISOString(),
   });
+
+  if (error?.code === "22P02") return false; // token que não é um UUID válido
+  if (error) throw error;
+  return data === true;
+}
+
+// Fecha a participação. "calcular" recebe o registro (início e respostas já salvas)
+// e devolve os campos do resultado.
+export async function finalizarParticipacao(ra, token, calcular) {
+  const { data: linha, error } = await banco()
+    .from(TABELA)
+    .select("iniciado_em, finalizado_em, respostas")
+    .eq("ra", ra)
+    .eq("token", token)
+    .maybeSingle();
+
+  // Token que não é um UUID válido também cai aqui (o banco recusa o formato)
+  if (error?.code === "22P02" || (!error && !linha)) return { erro: "sessao" };
+  if (error) throw error;
+  if (linha.finalizado_em) return { erro: "ja_enviado" };
+
+  const r = calcular({ iniciadoEm: Date.parse(linha.iniciado_em), respostasSalvas: linha.respostas || {} });
+  if (!(await gravarResultado(ra, token, r))) return { erro: "ja_enviado" };
+  return { ok: true };
+}
+
+// Grava o resultado. Só grava se ainda não estiver finalizado: se a pessoa enviar
+// duas vezes ao mesmo tempo (ou o ranking finalizar junto), só a primeira vale.
+// Devolve true se gravou.
+async function gravarResultado(ra, token, r) {
+  const { data, error } = await banco()
+    .from(TABELA)
+    .update({
+      acertos: r.acertos,
+      total: r.total,
+      percentual: r.percentual,
+      multiplicador: r.multiplicador,
+      pontuacao: r.pontuacao,
+      tempo_segundos: r.tempoSegundos,
+      finalizado_em: new Date().toISOString(),
+    })
+    .eq("ra", ra)
+    .eq("token", token)
+    .is("finalizado_em", null)
+    .select("ra");
+
+  if (error) throw error;
+  return data.length > 0;
+}
+
+// Finaliza quem começou e abandonou (fechou a aba, bloqueou a tela e não voltou):
+// todo mundo que iniciou antes de "inicioMinimo" (ms) e não enviou já estourou o
+// tempo, então é pontuado com as respostas que salvou durante o quiz.
+export async function finalizarExpirados(inicioMinimo, calcular) {
+  const { data, error } = await banco()
+    .from(TABELA)
+    .select("ra, token, iniciado_em, respostas")
+    .is("finalizado_em", null)
+    .lt("iniciado_em", new Date(inicioMinimo).toISOString());
+
+  if (error) throw error;
+  await Promise.all(
+    data.map((linha) =>
+      gravarResultado(
+        linha.ra,
+        linha.token,
+        calcular({ iniciadoEm: Date.parse(linha.iniciado_em), respostasSalvas: linha.respostas || {} })
+      )
+    )
+  );
 }
 
 // Ranking: só quem terminou; mais pontos primeiro, empate decidido pelo menor tempo.
 // O token nunca sai daqui.
 export async function listarRanking() {
-  const lista = await ler();
-  return lista
-    .filter((r) => r.finalizadoEm)
-    .sort((a, b) => b.pontuacao - a.pontuacao || a.tempoSegundos - b.tempoSegundos)
-    .map(({ usuario, ra, percentual, pontuacao }) => ({ usuario, ra, percentual, pontuacao }));
+  const { data, error } = await banco()
+    .from(TABELA)
+    .select("usuario, ra, percentual, pontuacao")
+    .not("finalizado_em", "is", null)
+    .order("pontuacao", { ascending: false })
+    .order("tempo_segundos", { ascending: true });
+
+  if (error) throw error;
+  // Garante número (a coluna é "numeric" no banco) para a tabela exibir certinho
+  return data.map((r) => ({ ...r, percentual: Number(r.percentual), pontuacao: Number(r.pontuacao) }));
 }

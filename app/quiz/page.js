@@ -87,6 +87,13 @@ export default function Quiz() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ra: sessao.ra, token: sessao.token, respostas: respostasRef.current }),
       });
+      // Sessão que o servidor não conhece (ex.: banco limpo depois que a pessoa começou):
+      // descarta e volta para o cadastro, em vez de ficar travado tentando enviar
+      if (resp.status === 403) {
+        localStorage.removeItem(CHAVE);
+        router.replace("/");
+        return;
+      }
       if (!resp.ok && resp.status !== 409) throw new Error();
       localStorage.removeItem(CHAVE); // terminou: limpa o que estava guardado
       router.push("/ranking");
@@ -120,6 +127,16 @@ export default function Quiz() {
     // Guarda no aparelho a cada resposta marcada
     sessaoRef.current = { ...sessaoRef.current, respostas: respostasRef.current };
     salvar(sessaoRef.current);
+
+    // E no servidor também, para valer mesmo se a pessoa sair antes de enviar.
+    // Se falhar (internet oscilou), não tem problema: a resposta vai junto no envio final.
+    const { ra, token } = sessaoRef.current;
+    fetch("/api/responder", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ra, token, pergunta: id, opcao: original }),
+      keepalive: true, // termina de enviar mesmo se a aba for fechada logo em seguida
+    }).catch(() => {});
   }
 
   function enviarManual() {

@@ -1,10 +1,18 @@
-import { listarRanking } from "../lib/armazenamento";
+import { finalizarExpirados, listarRanking } from "../lib/armazenamento";
+import { calcularResultado, inicioMinimoNoPrazo } from "../lib/pontuacao";
 import AtualizarAuto from "./Atualizarauto";
 
 // Sempre lê dados novos, sem cache
 export const dynamic = "force-dynamic";
 
 export default async function Ranking() {
+  // Antes de mostrar, pontua quem estourou o tempo e não enviou (abandonou o quiz),
+  // com as respostas salvas. Como o ranking recarrega a cada 30s, essas pessoas
+  // aparecem logo depois que o tempo delas acaba. Se falhar, mostra o ranking assim mesmo.
+  await finalizarExpirados(inicioMinimoNoPrazo(), (registro) => calcularResultado(registro)).catch((e) =>
+    console.error("[ranking] erro ao finalizar expirados:", e)
+  );
+
   let dados = [];
   let erro = false;
   try {
@@ -72,7 +80,7 @@ export default async function Ranking() {
         <p>Desenvolvido pelo Time de Soluções Digitais da Líderes JR. - 2026.</p>
       </footer>
 
-      <AtualizarAuto />
+      <AtualizarAuto segundos={30} />
     </main>
   );
 }

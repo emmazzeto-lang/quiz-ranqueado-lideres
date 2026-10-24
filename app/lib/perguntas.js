@@ -3,6 +3,35 @@
 export const TEMPO_TOTAL = 180; // segundos
 export const TOLERANCIA = 10; // segundos extras aceitos por atraso de rede
 
+// HORÁRIO EM QUE O QUIZ PODE SER INICIADO, no horário de Brasília, no formato
+// "AAAA-MM-DD HH:MM". Ex.: ABERTURA = "2026-10-27 19:30" e FECHAMENTO = "2026-10-27 20:00".
+// Deixe null para não ter limite (útil para testes).
+// Quem começar antes do fechamento ainda tem os 3 minutos completos para terminar.
+export const ABERTURA = null;
+export const FECHAMENTO = null;
+
+// O servidor pode estar em outro fuso (a Vercel usa UTC), então o fuso de Brasília
+// vai fixo no texto. O Brasil não tem mais horário de verão, então é sempre -03:00.
+function emBrasilia(texto) {
+  return texto ? new Date(`${texto.replace(" ", "T")}:00-03:00`).getTime() : null;
+}
+
+// Devolve "antes", "depois" ou "aberto" para o momento "agora" (em milissegundos).
+export function situacaoHorario(agora = Date.now(), abertura = ABERTURA, fechamento = FECHAMENTO) {
+  const abre = emBrasilia(abertura);
+  const fecha = emBrasilia(fechamento);
+  if (abre && agora < abre) return "antes";
+  if (fecha && agora >= fecha) return "depois";
+  return "aberto";
+}
+
+// "2026-10-27 19:30" -> "27/10 às 19:30", para as mensagens de erro
+export function formatarHorario(texto) {
+  const [data, hora] = texto.split(" ");
+  const [, mes, dia] = data.split("-");
+  return `${dia}/${mes} às ${hora}`;
+}
+
 export const perguntas = [
   {
     id: 0,

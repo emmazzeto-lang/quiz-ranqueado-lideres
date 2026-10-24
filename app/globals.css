@@ -243,8 +243,11 @@ body {
 /* =========================
    QUIZ
    ========================= */
-/* CABEÇALHO DO QUIZ */
+/* CABEÇALHO DO QUIZ (fica preso no topo ao rolar, com o cronômetro sempre à vista) */
 .quiz_cabecalho {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   width: 100%;
   padding: 24px 40px;
   display: flex;
@@ -635,17 +638,24 @@ body {
     font-size: 22px;
   }
 
-  /* Quiz: cabeçalho empilhado */
+  /* Quiz: cabeçalho compacto, para o cronômetro preso no topo não ocupar a tela */
   .quiz_cabecalho {
-    flex-direction: column;
-    align-items: stretch;
-    text-align: center;
-    padding: 14px 16px;
+    padding: 10px 16px;
     gap: 12px;
   }
 
+  .quiz_titulo span {
+    display: none;
+  }
+
+  .quiz_titulo h1 {
+    font-size: 16px;
+  }
+
   .timer {
-    width: 100%;
+    min-width: 0;
+    padding: 8px 12px;
+    font-size: 15px;
   }
 
   /* Quiz: perguntas e opções */
